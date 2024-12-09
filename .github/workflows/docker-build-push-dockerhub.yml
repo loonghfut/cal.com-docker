@@ -92,10 +92,6 @@ jobs:
           echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
 
-      # Temporarily disable ARM build due to runner performance issues
-      # - name: Set up QEMU
-      #   uses: docker/setup-qemu-action@v2
-
       - name: Start database
         run: |
           docker compose up -d database
@@ -119,7 +115,7 @@ jobs:
           file: ./Dockerfile
           load: true  # Load the image into the Docker daemon
           push: false  # Do not push the image at this stage
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
@@ -179,7 +175,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
